@@ -1,0 +1,42 @@
+---
+title: "Data Visualization Project"
+author: "Nave Cohen 313383135"
+date: '2022-03-30'
+output: word_document
+
+```{r}
+library(ggplot2)
+library(ggplot2movies)
+library(ggthemes)
+library(ggrepel)
+library(dplyr)
+
+df = read.csv('Economist_Assignment_Data.csv')
+df = df[-c(1)]
+print(head(df))
+```
+
+```{r}
+pl = ggplot(df,aes(CPI,HDI)) + geom_point(aes(color =  Region),size = 5,shape =1)
+pl = pl + geom_smooth(aes(group=1),method = 'lm',formula = y ~ log(x),se = FALSE,color = 'red')
+```
+
+```{r}
+points2lable = c("Russia", "Venezuela", "Iraq", "Myanmar", "Sudan",
+                 "Afghanistan", "Congo", "Greece", "Argentina", "Brazil",
+                 "India", "Italy", "China", "South Africa", "Spane",
+                 "Botswana", "Cape Verde", "Bhutan", "Rwanda", "France",
+                 "United States", "Germany", "Britain", "Barbados", "Norway", "Japan",
+                 "New Zealand", "Singapore")
+pl = pl + geom_text(aes(label=Country),data = subset(df,Country %in% points2lable),check_overlap = TRUE)
+```
+
+```{r}
+pl = pl + theme_bw() + scale_x_continuous(name = 'Corruption Perceptions Index, 2011 (10=least corrupt)',limits = c(.9,10.5),breaks = c(1:10)) + scale_y_continuous(name = 'Human Development Index, 2011 (1=best)',limits = c(.2,1.0))
+pl = pl + ggtitle('Corruption and Human Development') + theme_economist_white()
+print(pl)
+```
+
+
+
+
